@@ -1,26 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
+import Amplify, { Hub } from "aws-amplify";
+import awsExports from "./aws-exports";
+Amplify.configure(awsExports);
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App: React.FC = (): JSX.Element => {
+  const [currentUser, setCurrentUser] = useState();
+  useEffect(() => {
+    Hub.listen("auth", (event) => {
+      console.info("event:", event);
+      if (event.payload.data.message) {
+        alert(event.payload.data.message);
+        return;
+      } else {
+        setCurrentUser(event.payload.data);
+      }
+    });
+  }, []);
+  return <div className="App">{currentUser ? <Home /> : <Login />}</div>;
+};
 
 export default App;
