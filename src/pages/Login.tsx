@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
+import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
 
 const Login: React.FC = (): JSX.Element => {
   const [email, setEmail] = useState("");
@@ -7,15 +8,29 @@ const Login: React.FC = (): JSX.Element => {
   const [type, setType] = useState("login");
 
   const handleSignIn = async (event: React.SyntheticEvent) => {
-    console.info("event:", event);
     event.preventDefault();
+    if (!email) {
+      alert("Email Required");
+      return;
+    }
+    if (!password) {
+      alert("Password Required");
+      return;
+    }
     const reponse = Auth.signIn(email, password);
     console.info("reponse:", reponse);
   };
 
   const handleSignUp = async (event: React.SyntheticEvent) => {
-    console.info("event:", event);
     event.preventDefault();
+    if (!email) {
+      alert("Email Required");
+      return;
+    }
+    if (!password) {
+      alert("Password Required");
+      return;
+    }
     const reponse = Auth.signUp(email, password);
     console.info("reponse:", reponse);
   };
@@ -23,9 +38,11 @@ const Login: React.FC = (): JSX.Element => {
   return (
     <div>
       <div className="customer-login">
-        <div>User Email:</div>
+        <h3>Amplify Custom Login Demo</h3>
+        <div className="login-label">User Email:</div>
         <div>
           <input
+            className="login-input"
             type="text"
             value={email}
             onChange={(event) => {
@@ -33,9 +50,10 @@ const Login: React.FC = (): JSX.Element => {
             }}
           />
         </div>
-        <div>Password:</div>
+        <div className="login-label">Password:</div>
         <div>
           <input
+            className="login-input"
             type="password"
             value={password}
             onChange={(event) => {
@@ -45,29 +63,63 @@ const Login: React.FC = (): JSX.Element => {
         </div>
         <div>
           {type === "login" && (
-            <span
-              onClick={() => {
-                setType("signup");
-              }}
-            >
-              Click To SignUp
-            </span>
+            <button className="login-button" onClick={handleSignIn}>
+              Click To Sign In
+            </button>
           )}
           {type === "signup" && (
-            <span
-              onClick={() => {
-                setType("login");
-              }}
-            >
-              Click To Login
-            </span>
+            <button className="login-button" onClick={handleSignUp}>
+              Click To Sign Up
+            </button>
           )}
           {type === "login" && (
-            <button onClick={handleSignIn}>Click To Login</button>
+            <div className="text-right mt-5">
+              <span>No account?</span>
+              <span
+                className="link"
+                onClick={() => {
+                  setType("signup");
+                }}
+              >
+                Sign Up
+              </span>
+            </div>
           )}
           {type === "signup" && (
-            <button onClick={handleSignUp}>Click To SignUP</button>
+            <div className="text-right mt-5">
+              <span>Have a account?</span>
+              <span
+                className="link"
+                onClick={() => {
+                  setType("login");
+                }}
+              >
+                Click To Sign In
+              </span>
+            </div>
           )}
+          <div className="or">
+            <span>OR</span>
+          </div>
+          <button
+            className="login-button"
+            onClick={() => {
+              Auth.federatedSignIn({
+                provider: CognitoHostedUIIdentityProvider.Facebook,
+              });
+            }}
+          >
+            Sign In With Facebook
+          </button>
+
+          <button
+            className="login-button"
+            onClick={() => {
+              Auth.federatedSignIn();
+            }}
+          >
+            Sign In With Fed
+          </button>
         </div>
       </div>
     </div>
