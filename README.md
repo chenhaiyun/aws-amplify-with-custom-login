@@ -1,46 +1,105 @@
-# Getting Started with Create React App
+### Amplify React UI 自定义登录界面
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+本案例介绍如何从创建一个React Amplfiy的项目，并使用cognito作为用户认证，同时支持facebook的登录，其中主要的是介绍如何自定义Amplfiy的登录界面
 
-## Available Scripts
+#### 1. 创建React Typescript 项目
 
-In the project directory, you can run:
+##### 使用Creact-React-App创建 React Typescript 项目
 
-### `npm start`
+~~~
+$ npx create-react-app aws-amplify-customize-login --use-npm --template typescript
+~~~
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+##### 给项目添加 Eslint
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+~~~
+$ npx eslint --init
+✔ How would you like to use ESLint? · problems
+✔ What type of modules does your project use? · esm
+✔ Which framework does your project use? · react
+✔ Does your project use TypeScript? · No / Yes
+✔ Where does your code run? · browser
+✔ What format do you want your config file to be in? · JavaScript
+~~~
 
-### `npm test`
+##### Add Auto Fix On Save in Vscode
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+在项目根目录下新建 .vscode 目录，并新建 settings.json 文件，文件内容如下
 
-### `npm run build`
+~~~
+{
+    "editor.formatOnSave": true
+}
+~~~
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+#### 2. 给项目添加Amplfiy
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+~~~
+# 安装 aws-amplify 
+$ npm install -g @aws-amplify/cli
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+# 将amplify 添加到 react
+$ amplify init
 
-### `npm run eject`
+ Initialize the project with the above configuration? No
+? Enter a name for the environment dev
+? Choose your default editor: Visual Studio Code
+? Choose the type of app that you're building javascript
+Please tell us about your project
+? What javascript framework are you using react
+? Source Directory Path:  src
+? Distribution Directory Path: build
+? Build Command:  npm run-script build
+? Start Command: npm run-script start
+Using default provider  awscloudformation
+? Select the authentication method you want to use: AWS profile
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+~~~
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+#### 3. 给项目添加 Cognito 用户认证
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+~~~
+$ amplify add auth
+Do you want to use the default authentication and security configuration? Default configuration
+Warning: you will not be able to edit these selections. 
+How do you want users to be able to sign in? Email
+Do you want to configure advanced settings? No, I am done.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+$ amplify push
+~~~
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### 4. 安装 Amplify 库	
+
+~~~
+$ npm install aws-amplify @aws-amplify/ui-react
+
+~~~
+
+#### 5.添加Facebook登录
+
+~~~
+$ amplify update auth 
+Please note that certain attributes may not be overwritten if you choose to use defaults settings.
+Using service: Cognito, provided by: awscloudformation
+What do you want to do? Apply default configuration with Social Provider (Federation)
+What domain name prefix do you want to use? amplifycustomizeloginl37272254-37272254
+Enter your redirect signin URI: http://localhost:3000/
+? Do you want to add another redirect signin URI No
+Enter your redirect signout URI: http://localhost:3000/
+? Do you want to add another redirect signout URI No
+Select the identity providers you want to configure for your user pool: Facebook
+
+You've opted to allow users to authenticate via Facebook.  If you haven't already, you'll need to go to https://developers.facebook.com and create an A
+pp ID. 
+
+Enter your Facebook App ID for your OAuth flow:  8536xxxxxxxxxx888805
+Enter your Facebook App Secret for your OAuth flow:  ad2057450bxxxxxxxxx516cbd2ef3a
+Successfully updated auth resource awsamplifycustomizelf79ed719 locally
+
+$ amplify push
+
+
+~~~
+
