@@ -115,6 +115,17 @@ const Login: React.FC = (): JSX.Element => {
           <button
             className="login-button"
             onClick={() => {
+              Auth.federatedSignIn({
+                provider: CognitoHostedUIIdentityProvider.Google,
+              });
+            }}
+          >
+            Sign In With Google
+          </button>
+
+          <button
+            className="login-button"
+            onClick={() => {
               Auth.federatedSignIn();
             }}
           >
