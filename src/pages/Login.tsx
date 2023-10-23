@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Auth } from "aws-amplify";
-import { CognitoHostedUIIdentityProvider } from "@aws-amplify/auth/lib/types";
+import { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 
 const Login: React.FC = (): JSX.Element => {
   const [email, setEmail] = useState("");
